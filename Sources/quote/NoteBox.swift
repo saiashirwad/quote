@@ -105,6 +105,7 @@ final class NoteBoxController: NSWindowController {
         textView.isAutomaticTextReplacementEnabled = false
         textView.drawsBackground = false
         textView.backgroundColor = .clear
+        textView.insertionPointColor = .labelColor
         textView.textContainerInset = NSSize(width: 0, height: 4)
         textView.isVerticallyResizable = true
         textView.isHorizontallyResizable = false
