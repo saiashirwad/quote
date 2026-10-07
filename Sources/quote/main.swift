@@ -28,6 +28,7 @@ final class QuoteAppDelegate: NSObject, NSApplicationDelegate {
         }
         hotKeys.install()
 
+        Selection.promptForTrustIfNeeded()
         fputs("quote: file=\(notesPath) hotkeys=⌘G ⌃⌘V\n", stderr)
     }
 
@@ -70,25 +71,30 @@ final class QuoteAppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func openBox() {
+        let front = NSWorkspace.shared.frontmostApplication
         let pb = NSPasteboard.general
         let changeCount = pb.changeCount
         capturePasteboardChangeCount = changeCount
         var quote: String?
-        if changeCount != pasteboardBaselineChangeCount,
-           let s = pb.string(forType: .string),
-           !s.isEmpty
+        if let axQuote = Selection.selectedText(in: front) {
+            quote = axQuote
+            fputs("quote: quote from accessibility (\(axQuote.count) chars)\n", stderr)
+        } else if changeCount != pasteboardBaselineChangeCount,
+                  let s = pb.string(forType: .string),
+                  !s.isEmpty
         {
             quote = s
+            fputs("quote: quote from clipboard (\(s.count) chars)\n", stderr)
+        } else {
+            fputs("quote: no quote\n", stderr)
         }
-        noteBox.present(quote: quote)
+        noteBox.present(quote: quote, previousApp: front)
     }
 
     private func saveNote(quote: String?, note: String) {
         do {
             try NoteFile.appendNote(quote: quote, note: note, path: notesPath)
-            if let q = quote, !q.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
-               let captured = capturePasteboardChangeCount
-            {
+            if let captured = capturePasteboardChangeCount {
                 pasteboardBaselineChangeCount = captured
             }
             capturePasteboardChangeCount = nil

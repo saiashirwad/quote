@@ -173,10 +173,10 @@ final class NoteBoxController: NSWindowController {
 
     var isVisible: Bool { panel.isVisible }
 
-    func present(quote: String?) {
+    func present(quote: String?, previousApp: NSRunningApplication? = nil) {
         hasClosed = false
         suppressResignCancel = true
-        previousApp = NSWorkspace.shared.frontmostApplication
+        self.previousApp = previousApp ?? NSWorkspace.shared.frontmostApplication
         currentQuote = quote
 
         if let q = quote, !q.isEmpty {

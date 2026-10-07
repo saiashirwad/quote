@@ -11,7 +11,7 @@ Background macOS utility: global hotkeys, a small floating note box, and a Markd
 | Esc | Cancel |
 | ⌃⌘V | Copy all notes to the pasteboard and clear the file |
 
-Select text and press ⌘C in any app before ⌘G to attach it as a block quote on save.
+When you press ⌘G, Quote tries to read the front app’s selected text (Accessibility — grant Quote once in **System Settings → Privacy & Security → Accessibility**). That works in browsers, PDF viewers, and native apps with a normal selection. If nothing is selected there, it falls back to the clipboard when its contents changed since your last saved note. Terminals usually don’t expose selection to Accessibility; use copy-on-select instead (e.g. Ghostty: `copy-on-select = clipboard`).
 
 ## Notes file
 
