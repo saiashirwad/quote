@@ -2,12 +2,12 @@
 
 Background macOS hotkey utility: a floating note box and a Markdown file of stacked notes.
 
-| Shortcut | Action |
-|----------|--------|
-| ⌘G | Open the note box |
-| ⌘↩ | Save |
-| Esc / click away | Cancel |
-| ⌃⌘V | Copy all notes to the pasteboard and clear the file |
+| Shortcut         | Action                                              |
+| ---------------- | --------------------------------------------------- |
+| ⌘G               | Open the note box                                   |
+| ⌘↩               | Save                                                |
+| Esc / click away | Cancel                                              |
+| ⌃⌘V              | Copy all notes to the pasteboard and clear the file |
 
 On ⌘G, Quote reads the front app’s selection via Accessibility (grant once in **System Settings → Privacy & Security → Accessibility**) — browsers, PDFs, and most native apps. If nothing is selected, it uses the clipboard when it changed since your last saved note. Terminals rarely expose selection; use copy-on-select (Ghostty: `copy-on-select = clipboard`).
 
