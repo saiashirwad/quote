@@ -20,13 +20,16 @@ Path: `QUOTE_FILE` environment variable, or `~/notes/quote.md` by default. Send 
 ## Install / uninstall
 
 ```bash
-./scripts/install.sh   # build, install to ~/.local/bin, register LaunchAgent
-./scripts/uninstall.sh # stop agent, remove plist and binary
+./scripts/install.sh   # build Quote.app, install to ~/Applications, register LaunchAgent
+./scripts/uninstall.sh # stop agent, remove plist and app
 ```
 
-## Foreground / logs
+## Development / logs
 
 ```bash
-swift run quote        # run in foreground (e.g. in tmux)
+./scripts/dev.sh       # build Quote.app and run via LaunchServices (for tmux)
+swift run quote        # typing works; macOS Dictation (fn-fn) in the box needs the app bundle
 tail -f ~/Library/Logs/quote.log   # when using install.sh
 ```
+
+System Dictation (fn-fn) works in the note box when Quote runs as `Quote.app`, because macOS can attach dictation to a real app identity.
