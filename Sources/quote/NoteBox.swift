@@ -50,9 +50,12 @@ final class NoteBoxController: NSWindowController {
         quoteLabel = NSTextField(labelWithString: "")
         quoteLabel.font = .systemFont(ofSize: 13)
         quoteLabel.textColor = .secondaryLabelColor
-        quoteLabel.lineBreakMode = .byTruncatingTail
+        quoteLabel.lineBreakMode = .byWordWrapping
         quoteLabel.maximumNumberOfLines = 3
         quoteLabel.cell?.truncatesLastVisibleLine = true
+        quoteLabel.preferredMaxLayoutWidth = 456
+        quoteLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        quoteLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         quoteLabel.translatesAutoresizingMaskIntoConstraints = false
 
         textView = NoteTextView()
@@ -77,6 +80,7 @@ final class NoteBoxController: NSWindowController {
 
         let stack = NSStackView(views: [quoteLabel, scrollView])
         stack.orientation = .vertical
+        stack.alignment = .leading
         stack.spacing = 8
         stack.edgeInsets = NSEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
         stack.translatesAutoresizingMaskIntoConstraints = false
@@ -84,10 +88,13 @@ final class NoteBoxController: NSWindowController {
         let content = panel.contentView!
         content.addSubview(stack)
         NSLayoutConstraint.activate([
+            content.widthAnchor.constraint(equalToConstant: 480),
             stack.leadingAnchor.constraint(equalTo: content.leadingAnchor),
             stack.trailingAnchor.constraint(equalTo: content.trailingAnchor),
             stack.topAnchor.constraint(equalTo: content.topAnchor),
             stack.bottomAnchor.constraint(equalTo: content.bottomAnchor),
+            quoteLabel.widthAnchor.constraint(equalTo: stack.widthAnchor, constant: -24),
+            scrollView.widthAnchor.constraint(equalTo: stack.widthAnchor, constant: -24),
             scrollView.heightAnchor.constraint(equalToConstant: 90),
         ])
 

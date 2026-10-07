@@ -41,7 +41,6 @@ cat > "$PLIST" <<PLIST
 </plist>
 PLIST
 
-UID="$(id -u)"
 launchctl bootout "gui/${UID}/com.texoport.quote" 2>/dev/null || true
 launchctl bootstrap "gui/${UID}" "$PLIST"
 echo "Installed quote → $BIN_DST (launchd com.texoport.quote)"

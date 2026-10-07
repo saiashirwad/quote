@@ -10,6 +10,7 @@ enum HotKeyID: UInt32 {
 @MainActor
 final class HotKeyCenter {
     private var handlerRef: EventHandlerRef?
+    private var hotKeyRefs: [EventHotKeyRef?] = []
     private let onEvent: (HotKeyID) -> Void
 
     init(onEvent: @escaping (HotKeyID) -> Void) {
@@ -32,14 +33,16 @@ final class HotKeyCenter {
             )
             guard err == noErr else { return err }
             let center = Unmanaged<HotKeyCenter>.fromOpaque(userData).takeUnretainedValue()
-            let id = HotKeyID(rawValue: hotKeyID.id) ?? .typeNote
+            guard let id = HotKeyID(rawValue: hotKeyID.id) else {
+                return OSStatus(eventNotHandledErr)
+            }
             MainActor.assumeIsolated {
                 center.onEvent(id)
             }
             return noErr
         }
         let selfPtr = Unmanaged.passUnretained(self).toOpaque()
-        InstallEventHandler(
+        let handlerStatus = InstallEventHandler(
             GetApplicationEventTarget(),
             callback,
             1,
@@ -47,18 +50,35 @@ final class HotKeyCenter {
             selfPtr,
             &handlerRef
         )
+        if handlerStatus != noErr {
+            fputs(
+                "quote: failed to install hotkey handler (status \(handlerStatus))\n",
+                stderr
+            )
+        }
 
-        // ⌘G
-        register(keyCode: 5, modifiers: UInt32(cmdKey), id: .typeNote)
-        // ⌘E
-        register(keyCode: 14, modifiers: UInt32(cmdKey), id: .talk)
-        // ⌃⌘V
-        register(keyCode: 9, modifiers: UInt32(cmdKey | controlKey), id: .send)
+        register(keyCode: 5, modifiers: UInt32(cmdKey), id: .typeNote, label: "⌘G type")
+        register(keyCode: 14, modifiers: UInt32(cmdKey), id: .talk, label: "⌘E talk")
+        register(keyCode: 9, modifiers: UInt32(cmdKey | controlKey), id: .send, label: "⌃⌘V send")
     }
 
-    private func register(keyCode: UInt32, modifiers: UInt32, id: HotKeyID) {
+    private func register(keyCode: UInt32, modifiers: UInt32, id: HotKeyID, label: String) {
         var ref: EventHotKeyRef?
         let hotKeyID = EventHotKeyID(signature: OSType(0x5154_4555), id: id.rawValue) // 'QTEU'
-        RegisterEventHotKey(keyCode, modifiers, hotKeyID, GetApplicationEventTarget(), 0, &ref)
+        let status = RegisterEventHotKey(
+            keyCode,
+            modifiers,
+            hotKeyID,
+            GetApplicationEventTarget(),
+            0,
+            &ref
+        )
+        if status != noErr {
+            fputs(
+                "quote: failed to register \(label) (status \(status)) — another app (e.g. Sendpoint) probably owns it\n",
+                stderr
+            )
+        }
+        hotKeyRefs.append(ref)
     }
 }
