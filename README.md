@@ -19,14 +19,14 @@ Path: `QUOTE_FILE` environment variable, or `~/notes/quote.md` by default. Send 
 ## Install / uninstall
 
 ```bash
-./scripts/install.sh   # build, install to ~/.local/bin, register LaunchAgent
-./scripts/uninstall.sh # stop agent, remove plist and binary
+./scripts/install.sh   # build Quote.app, install to ~/Applications, register LaunchAgent
+./scripts/uninstall.sh # stop agent, remove plist and app
 ```
 
 ## Foreground / logs
 
 ```bash
-swift run quote          # run in a terminal or tmux session
+./scripts/dev.sh       # build Quote.app and run in foreground (dictation needs the bundle)
 tail -f ~/Library/Logs/quote.log   # when using install.sh
 ```
 
