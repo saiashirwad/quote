@@ -1,9 +1,9 @@
-import QuoteFileLogic
+@testable import quote
 import XCTest
 
 final class NoteFileTests: XCTestCase {
     func testQuoteAndNote() {
-        let out = NoteFile.format(quote: "line one\nline two", note: "my note")
+        let out = Notes.entry(quote: "line one\nline two", note: "my note")
         XCTAssertEqual(
             out,
             """
@@ -19,7 +19,7 @@ final class NoteFileTests: XCTestCase {
     }
 
     func testNoteOnly() {
-        let out = NoteFile.format(quote: nil, note: "standalone")
+        let out = Notes.entry(quote: nil, note: "standalone")
         XCTAssertEqual(
             out,
             """
@@ -32,7 +32,7 @@ final class NoteFileTests: XCTestCase {
     }
 
     func testQuoteOnly() {
-        let out = NoteFile.format(quote: "quoted", note: "   ")
+        let out = Notes.entry(quote: "quoted", note: "   ")
         XCTAssertEqual(
             out,
             """
@@ -44,8 +44,13 @@ final class NoteFileTests: XCTestCase {
         )
     }
 
+    func testBothEmpty() {
+        XCTAssertNil(Notes.entry(quote: nil, note: "   "))
+        XCTAssertNil(Notes.entry(quote: "  ", note: ""))
+    }
+
     func testMultilineQuoteWithBlankLine() {
-        let out = NoteFile.format(quote: "a\n\nb", note: "n")
+        let out = Notes.entry(quote: "a\n\nb", note: "n")
         XCTAssertEqual(
             out,
             """
@@ -62,15 +67,15 @@ final class NoteFileTests: XCTestCase {
     }
 
     func testAppendToEmpty() {
-        let entry = NoteFile.format(quote: nil, note: "x")
-        let merged = NoteFile.append(entry: entry, toExisting: "")
+        let entry = Notes.entry(quote: nil, note: "x")!
+        let merged = Notes.append(entry, to: "")
         XCTAssertEqual(merged, entry)
     }
 
     func testAppendToExisting() {
         let existing = "old\n\n---\n\n"
-        let entry = NoteFile.format(quote: "q", note: "n")
-        let merged = NoteFile.append(entry: entry, toExisting: existing)
+        let entry = Notes.entry(quote: "q", note: "n")!
+        let merged = Notes.append(entry, to: existing)
         XCTAssertTrue(merged.hasPrefix("old"))
         XCTAssertTrue(merged.hasSuffix(entry))
     }
