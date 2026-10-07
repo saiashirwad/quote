@@ -10,7 +10,7 @@ LOG="$ROOT/.build/dev.log"
 "$ROOT/scripts/bundle.sh"
 pkill -x quote || true
 
-open -n "$ROOT/.build/Quote.app" --stdout "$LOG" --stderr "$LOG"
+open -n --stdout "$LOG" --stderr "$LOG" "$ROOT/.build/Quote.app"
 
 trap 'pkill -x quote' INT TERM EXIT
 tail -f "$LOG"
