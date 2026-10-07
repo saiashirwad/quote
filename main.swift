@@ -112,7 +112,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     private let textView = NoteTextView()
 
     override init() {
-        panel = KeyablePanel(contentRect: NSRect(x: 0, y: 0, width: 520, height: 200), styleMask: [.borderless], backing: .buffered, defer: false)
+        panel = KeyablePanel(contentRect: NSRect(x: 0, y: 0, width: 520, height: 200), styleMask: [.borderless, .nonactivatingPanel], backing: .buffered, defer: false)
         panel.isFloatingPanel = true
         panel.level = .floating
         panel.hidesOnDeactivate = false
@@ -236,7 +236,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     }
 
     private func focus() {
-        NSApp.activate(ignoringOtherApps: true)
         panel.makeKeyAndOrderFront(nil)
         panel.makeFirstResponder(textView)
     }

@@ -16,7 +16,7 @@ install: build
 	cp .build/quote $(BIN)
 	codesign --force --sign "$(IDENTITY)" --identifier com.texoport.quote $(BIN)
 	echo '{"Label":"com.texoport.quote","ProgramArguments":["$(BIN)"],"RunAtLoad":true,"KeepAlive":true,"StandardOutPath":"$(LOG)","StandardErrorPath":"$(LOG)","LimitLoadToSessionType":"Aqua"}' | plutil -convert xml1 -o $(PLIST) -
-	-launchctl bootout $(AGENT) 2>/dev/null
+	-launchctl bootout $(AGENT) 2>/dev/null; while launchctl print $(AGENT) >/dev/null 2>&1; do sleep 0.1; done
 	launchctl bootstrap gui/$$(id -u) $(PLIST)
 
 dev: install
