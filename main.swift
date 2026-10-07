@@ -1,3 +1,8 @@
+// Quote — capture quoted selections into a markdown notes file.
+// ⌘G opens the note box (Accessibility selection from the front app, else clipboard if changed since last save;
+// terminals: use copy-on-select, e.g. Ghostty copy-on-select = clipboard).
+// ⌘↩ saves; Esc or click-away cancels. ⌃⌘V copies all notes and clears the file (backup: quote.last.md).
+// Notes file: $QUOTE_FILE or ~/notes/quote.md. make dev | make install | make uninstall. Log: ~/Library/Logs/quote.log.
 import AppKit
 @preconcurrency import ApplicationServices
 import Carbon
