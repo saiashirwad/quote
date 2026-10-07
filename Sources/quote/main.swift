@@ -92,6 +92,8 @@ final class NoteTextView: NSTextView {
         "Note".draw(with: rect, options: .usesLineFragmentOrigin, attributes: attrs)
     }
     override func didChangeText() { super.didChangeText(); needsDisplay = true }
+    // NSTextView turns Esc into complete:, so it never reaches a menu key equivalent.
+    override func cancelOperation(_ sender: Any?) { NSApp.sendAction(#selector(AppDelegate.cancelNote(_:)), to: nil, from: self) }
 }
 
 @MainActor
@@ -200,7 +202,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         edit.addItem(menuItem("Select All", action: #selector(NSText.selectAll(_:)), key: "a"))
         edit.addItem(.separator())
         let saveItem = menuItem("Save Note", action: #selector(saveNote(_:)), key: "\r"); saveItem.target = self; edit.addItem(saveItem)
-        let cancelItem = menuItem("Cancel", action: #selector(cancelNote(_:)), key: "\u{1b}", flags: []); cancelItem.target = self; edit.addItem(cancelItem)
         NSApp.mainMenu = main
     }
 
