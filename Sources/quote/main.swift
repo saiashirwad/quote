@@ -28,7 +28,7 @@ final class QuoteAppDelegate: NSObject, NSApplicationDelegate {
         }
         hotKeys.install()
 
-        fputs("quote: file=\(notesPath) hotkeys=⌘G type ⌘E talk ⌃⌘V send\n", stderr)
+        fputs("quote: file=\(notesPath) hotkeys=⌘G ⌃⌘V\n", stderr)
     }
 
     private func buildEditMenu() {
@@ -60,22 +60,16 @@ final class QuoteAppDelegate: NSObject, NSApplicationDelegate {
         switch id {
         case .typeNote:
             if noteBox.isVisible {
-                noteBox.refocus(startDictation: false)
+                noteBox.refocus()
             } else {
-                openBox(startDictation: false)
-            }
-        case .talk:
-            if noteBox.isVisible {
-                noteBox.refocus(startDictation: true)
-            } else {
-                openBox(startDictation: true)
+                openBox()
             }
         case .send:
             sendNotes()
         }
     }
 
-    private func openBox(startDictation: Bool) {
+    private func openBox() {
         let pb = NSPasteboard.general
         let changeCount = pb.changeCount
         capturePasteboardChangeCount = changeCount
@@ -86,7 +80,7 @@ final class QuoteAppDelegate: NSObject, NSApplicationDelegate {
         {
             quote = s
         }
-        noteBox.present(quote: quote, startDictation: startDictation)
+        noteBox.present(quote: quote)
     }
 
     private func saveNote(quote: String?, note: String) {

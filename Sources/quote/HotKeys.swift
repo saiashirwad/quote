@@ -3,7 +3,6 @@ import Foundation
 
 enum HotKeyID: UInt32 {
     case typeNote = 1
-    case talk = 2
     case send = 3
 }
 
@@ -58,7 +57,6 @@ final class HotKeyCenter {
         }
 
         register(keyCode: 5, modifiers: UInt32(cmdKey), id: .typeNote, label: "⌘G type")
-        register(keyCode: 14, modifiers: UInt32(cmdKey), id: .talk, label: "⌘E talk")
         register(keyCode: 9, modifiers: UInt32(cmdKey | controlKey), id: .send, label: "⌃⌘V send")
     }
 

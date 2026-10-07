@@ -6,11 +6,12 @@ Background macOS utility: global hotkeys, a small floating note box, and a Markd
 
 | Shortcut | Action |
 |----------|--------|
-| ⌘G | Open the box (type) |
-| ⌘E | Open the box and start dictation |
+| ⌘G | Open the note box |
+| ⌘↩ | Save (in the box) |
+| Esc | Cancel |
 | ⌃⌘V | Copy all notes to the pasteboard and clear the file |
 
-Select text and press ⌘C in any app before ⌘G/⌘E to attach it as a block quote on save.
+Select text and press ⌘C in any app before ⌘G to attach it as a block quote on save.
 
 ## Notes file
 
@@ -19,15 +20,13 @@ Path: `QUOTE_FILE` environment variable, or `~/notes/quote.md` by default. Send 
 ## Install / uninstall
 
 ```bash
-./scripts/install.sh   # build Quote.app, install to ~/Applications, register LaunchAgent
-./scripts/uninstall.sh # stop agent, remove plist and app
+./scripts/install.sh   # build, install to ~/.local/bin, register LaunchAgent
+./scripts/uninstall.sh # stop agent, remove plist and binary
 ```
 
 ## Foreground / logs
 
 ```bash
-./scripts/dev.sh       # build Quote.app and run in foreground (dictation needs the bundle)
+swift run quote        # run in foreground (e.g. in tmux)
 tail -f ~/Library/Logs/quote.log   # when using install.sh
 ```
-
-Enable **Keyboard → Dictation** in System Settings for ⌘E talk mode.

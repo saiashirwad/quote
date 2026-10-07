@@ -4,19 +4,15 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-"$ROOT/scripts/bundle.sh" >/dev/null
+swift build -c release
 
-APP_DST="${HOME}/Applications/Quote.app"
-EXE="${APP_DST}/Contents/MacOS/quote"
-mkdir -p "${HOME}/Applications"
-rm -rf "$APP_DST"
-if command -v ditto >/dev/null 2>&1; then
-	ditto "$ROOT/.build/Quote.app" "$APP_DST"
-else
-	cp -R "$ROOT/.build/Quote.app" "$APP_DST"
-fi
+BIN_DST="${HOME}/.local/bin/quote"
+mkdir -p "${HOME}/.local/bin"
+cp "$ROOT/.build/release/quote" "$BIN_DST"
+chmod +x "$BIN_DST"
+codesign --force --sign - "$BIN_DST"
 
-rm -f "${HOME}/.local/bin/quote"
+rm -rf "${HOME}/Applications/Quote.app"
 
 LOG_DIR="${HOME}/Library/Logs"
 PLIST="${HOME}/Library/LaunchAgents/com.texoport.quote.plist"
@@ -31,7 +27,7 @@ cat > "$PLIST" <<PLIST
   <string>com.texoport.quote</string>
   <key>ProgramArguments</key>
   <array>
-    <string>${EXE}</string>
+    <string>${BIN_DST}</string>
   </array>
   <key>RunAtLoad</key>
   <true/>
@@ -49,4 +45,4 @@ PLIST
 
 launchctl bootout "gui/${UID}/com.texoport.quote" 2>/dev/null || true
 launchctl bootstrap "gui/${UID}" "$PLIST"
-echo "Installed Quote.app → $APP_DST (launchd com.texoport.quote)"
+echo "Installed quote → $BIN_DST (launchd com.texoport.quote)"
